@@ -1,0 +1,47 @@
+# === Archivos de compilación Java ===
+*.class
+
+# === Carpetas comunes generadas por Ant ===
+/build/
+/dist/
+/out/
+
+# === Archivos de log y temporales ===
+*.log
+*.tmp
+*.bak
+*~
+
+# === Archivos de sistema ===
+.DS_Store
+Thumbs.db
+
+# === Archivos del editor ===
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+.nb-gradle/
+
+# VS Code
+.vscode/
+
+# === Archivos generados ===
+*.jar
+*.war
+*.ear
+
+# === Librerías externas (si no las gestionas con Maven o Gradle) ===
+lib/*.jar
