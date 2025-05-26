@@ -65,6 +65,8 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
     private void agregarFichas(){
         Ficha ficha = new Peon("negro","C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon (1).png");
         this.matrizCasillas[6][3].setFicha(ficha);
+        Ficha ficha4 = new Peon("negro","C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon (1).png");
+        this.matrizCasillas[6][4].setFicha(ficha4);
         Ficha ficha3 = new Peon("blanco","C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon.png");
         this.matrizCasillas[3][4].setFicha(ficha3);
         Ficha ficha2 = new Peon("blanco","C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon.png");
@@ -200,18 +202,19 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
         PanelCasilla panel = (PanelCasilla) e.getSource();
       //  System.out.println(panel.getFicha().getTipo());
       
-      if(panel.getFicha() != null || panel.getBackground().equals(verde)){
-          
-          
-          if(tipo(panel).equals("peon")){
-                moverPeones(panel);
-          }
+      if(panel.getFicha() != null || panel.getBackground().equals(verde) || panel.getBackground().equals(Color.red)){
+
+
+                moverFichas(panel);
+
       }else{
-          
+         if(!movimientos.isEmpty()){
+             limpiarMovimientos();
+         }
       }
       
       
-             //if(panel.getFicha().getEquipo().e) 
+             //if(panel.getFicha().getEquipo().e)
           
        
       
@@ -219,41 +222,24 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
         
     }
     
-    public String tipo(PanelCasilla panel){
-        
-        String tipo = " ";
-        
-        if(movimientos.isEmpty()){
-          
-            tipo = panel.getFicha().getTipo();
-         
-        }else{
-        for(PanelCasilla i: movimientos){
-            if(i.getFicha() != null){
-                tipo = i.getFicha().getTipo();
-            }
-        }        
-        }
-        
-       
-        
-        return tipo;
-        
-    }
+
     
-    public void moverPeones(PanelCasilla panel){
+    public void moverFichas(PanelCasilla panel){
         if(panel.getFicha() != null){
            
             
-            
+
             if(movimientos.isEmpty()){
-         
+
                  panel.getFicha().mover(matrizCasillas,this.movimientos, this.coloresAntiguos);
                 
+            }else if(panel.getBackground().equals(Color.red)){
+                System.out.println("Si es rojo");
+                eliminarFicha(panel);
             }else{
-                limpiarMovimientos(panel);
+                limpiarMovimientos();
             }
-           
+
             
             
             
@@ -268,15 +254,23 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
                         }
                     }
                 }
-                        
-                
-               
                 trasladarFicha(panel);
             }
           
         }
     }
-    
+
+    public void eliminarFicha(PanelCasilla panel){
+        //Eliminar la ficha en el panel
+        panel.eliminarFicha();
+        //Poner la ficha que elimino a la otra en el panel de color rojo
+        panel.setFicha(movimientos.get(0).getFicha());
+        //Eliminar la ficha de la posicion de movimientos
+        movimientos.get(0).eliminarFicha();
+        //LLamar al metodo de limipieza
+        limpiarMovimientos();
+    }
+
     
     public void trasladarFicha(PanelCasilla panel){
         Iterator<PanelCasilla> i = movimientos.iterator();
@@ -303,10 +297,10 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
     }
 
     
-    public void limpiarMovimientos(PanelCasilla panel){
+    public void limpiarMovimientos(){
          int c = 0;
-          Iterator<PanelCasilla> i = movimientos.iterator();
-                if(panel.getFicha().equals(i.next().getFicha())){
+
+
                   
                     for(PanelCasilla j: movimientos){
                        if(j.getBackground().equals(verde) || j.getBackground().equals(Color.red)){
@@ -319,7 +313,7 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
                     movimientos.clear();
                     coloresAntiguos.clear();
             
-                }
+
     }
     
     @Override

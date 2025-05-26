@@ -61,7 +61,7 @@ public class Peon extends Ficha{
         CoordenadaFicha coordenada = CoordenadaFicha.localizarPosicion(m, this);
 
         if(inicio == false){
-            // inicio = true;
+
 
 
             coloresAntiguos.add(m[coordenada.getFila() - 1][coordenada.getColumna()].getBackground());
@@ -104,6 +104,7 @@ public class Peon extends Ficha{
                     //Cambiar color de la casilla al rojo
                     m[coor.getFila() - 1][coor.getColumna() - 1].setBackground(Color.red);
                     //Agregar a la lista de movimientos
+                    movimientos.add(m[coor.getFila()][coor.getColumna()]);
                     movimientos.add(m[coor.getFila() - 1][coor.getColumna() - 1]);
                 }
 
