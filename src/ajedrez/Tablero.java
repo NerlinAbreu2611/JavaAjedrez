@@ -12,7 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Iterator;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 /**
  *
@@ -63,10 +63,17 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
     }
     
     private void agregarFichas(){
-        Ficha ficha = new Peon("negro","C:src\\imagenes\\peon (1).png");
-        this.matrizCasillas[6][2].setFicha(ficha);
-        Ficha ficha2 = new Peon("negro","C:src\\imagenes\\peon (1).png");
+        Ficha ficha = new Peon("negro","C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon (1).png");
+        this.matrizCasillas[6][3].setFicha(ficha);
+        Ficha ficha3 = new Peon("blanco","C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon.png");
+        this.matrizCasillas[3][4].setFicha(ficha3);
+        Ficha ficha2 = new Peon("blanco","C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon.png");
         this.matrizCasillas[3][2].setFicha(ficha2);
+
+       /* ImageIcon imagen = new ImageIcon("");
+        Icon icono = new ImageIcon(imagen.getImage().getScaledInstance((this.getWidth() / 8) - 10, (this.getHeight() / 8) - 10, 1));
+
+        this.matrizCasillas[3][2].getCasilla().setIcon(icono);*/
     }
     
     private boolean turnoBlanco = true;
@@ -280,7 +287,7 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
         int c = 0;
 
         for (PanelCasilla j : movimientos) {
-            if (j.getBackground().equals(verde)) {
+            if (j.getBackground().equals(verde) || j.getBackground().equals(Color.red)) {
                 j.setBackground(coloresAntiguos.get(c));
                 c++;
             }
@@ -302,7 +309,7 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
                 if(panel.getFicha().equals(i.next().getFicha())){
                   
                     for(PanelCasilla j: movimientos){
-                       if(j.getBackground().equals(verde)){
+                       if(j.getBackground().equals(verde) || j.getBackground().equals(Color.red)){
                         j.setBackground(coloresAntiguos.get(c));                        
                          c++;
                        }
