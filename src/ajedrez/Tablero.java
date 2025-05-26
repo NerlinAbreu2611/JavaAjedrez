@@ -7,16 +7,27 @@ package ajedrez;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import javax.swing.JFrame;
 
 /**
  *
  * @author elmen
  */
-public class Tablero extends javax.swing.JFrame  {
+public class Tablero extends javax.swing.JFrame implements  MouseListener  {
 
     /**
      * Creates new form Tablero
      */
+    
+    
+    private ArrayList<PanelCasilla> movimientos = new ArrayList<>();
+    private ArrayList<Color> coloresAntiguos = new ArrayList<>();
+    
     private Color marron = new Color(139,69,19);
     private Color  blanco = Color.WHITE;
     public Tablero() {
@@ -25,6 +36,9 @@ public class Tablero extends javax.swing.JFrame  {
         this.setTitle("Tablero de ajedrez");
         crearTablero();
         this.setLocationRelativeTo(null);
+        this.agregarEventosCasillas();
+        this.agregarFichas();
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
     private  PanelCasilla [][] matrizCasillas = new PanelCasilla[8][8];
@@ -45,6 +59,26 @@ public class Tablero extends javax.swing.JFrame  {
                 matrizCasillas[i][j] = casilla;
                 panelTablero.add(casilla);
             }
+        }
+    }
+    
+    private void agregarFichas(){
+        Ficha ficha = new Peon("negro","C:src\\imagenes\\peon (1).png");
+        this.matrizCasillas[6][2].setFicha(ficha);
+        Ficha ficha2 = new Peon("negro","C:src\\imagenes\\peon (1).png");
+        this.matrizCasillas[3][2].setFicha(ficha2);
+    }
+    
+    private boolean turnoBlanco = true;
+    private boolean turnoNegro = false;
+    
+    
+    public void agregarEventosCasillas(){
+        for (int i = 0; i < matrizCasillas.length; i++) {
+            for (int j = 0; j < matrizCasillas.length; j++) {  
+                matrizCasillas[i][j].addMouseListener(this);
+            }
+            
         }
     }
 
@@ -151,4 +185,153 @@ public class Tablero extends javax.swing.JFrame  {
     private javax.swing.JPanel panelBase;
     private javax.swing.JPanel panelTablero;
     // End of variables declaration//GEN-END:variables
+    
+    private Color verde = Color.GREEN;
+    
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        PanelCasilla panel = (PanelCasilla) e.getSource();
+      //  System.out.println(panel.getFicha().getTipo());
+      
+      if(panel.getFicha() != null || panel.getBackground().equals(verde)){
+          
+          
+          if(tipo(panel).equals("peon")){
+                moverPeones(panel);
+          }
+      }else{
+          
+      }
+      
+      
+             //if(panel.getFicha().getEquipo().e) 
+          
+       
+      
+        
+        
+    }
+    
+    public String tipo(PanelCasilla panel){
+        
+        String tipo = " ";
+        
+        if(movimientos.isEmpty()){
+          
+            tipo = panel.getFicha().getTipo();
+         
+        }else{
+        for(PanelCasilla i: movimientos){
+            if(i.getFicha() != null){
+                tipo = i.getFicha().getTipo();
+            }
+        }        
+        }
+        
+       
+        
+        return tipo;
+        
+    }
+    
+    public void moverPeones(PanelCasilla panel){
+        if(panel.getFicha() != null){
+           
+            
+            
+            if(movimientos.isEmpty()){
+         
+                 panel.getFicha().mover(matrizCasillas,this.movimientos, this.coloresAntiguos);
+                
+            }else{
+                limpiarMovimientos(panel);
+            }
+           
+            
+            
+            
+        }else{
+            if(panel.getBackground().equals(verde)){
+                
+                for(PanelCasilla i: movimientos){
+                    if(i.getFicha() != null){
+                        if(i.getFicha().getTipo().equalsIgnoreCase("peon")){
+                            Peon p = (Peon) i.getFicha();
+                             p.setInicio(true);
+                        }
+                    }
+                }
+                        
+                
+               
+                trasladarFicha(panel);
+            }
+          
+        }
+    }
+    
+    
+    public void trasladarFicha(PanelCasilla panel){
+        Iterator<PanelCasilla> i = movimientos.iterator();
+        PanelCasilla anterior = i.next();
+        panel.setFicha(anterior.getFicha());
+        anterior.eliminarFicha();
+        
+        int c = 0;
+
+        for (PanelCasilla j : movimientos) {
+            if (j.getBackground().equals(verde)) {
+                j.setBackground(coloresAntiguos.get(c));
+                c++;
+            }
+
+        }
+        
+        
+
+        movimientos.clear();
+        coloresAntiguos.clear();
+
+        
+    }
+
+    
+    public void limpiarMovimientos(PanelCasilla panel){
+         int c = 0;
+          Iterator<PanelCasilla> i = movimientos.iterator();
+                if(panel.getFicha().equals(i.next().getFicha())){
+                  
+                    for(PanelCasilla j: movimientos){
+                       if(j.getBackground().equals(verde)){
+                        j.setBackground(coloresAntiguos.get(c));                        
+                         c++;
+                       }
+                      
+                     }
+                  
+                    movimientos.clear();
+                    coloresAntiguos.clear();
+            
+                }
+    }
+    
+    @Override
+    public void mousePressed(MouseEvent e) {
+       
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+      
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+     
+    }
 }

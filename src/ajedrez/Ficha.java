@@ -4,6 +4,8 @@
  */
 package ajedrez;
 
+import java.awt.Color;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 /**
@@ -15,7 +17,7 @@ public abstract class Ficha {
     
     private String equipo;
     private String tipo;
-    private CoordenadaFicha posicion;
+ 
     private ImageIcon imagenFicha;
 
     public ImageIcon getImagenFicha() {
@@ -28,21 +30,18 @@ public abstract class Ficha {
     
     
    
-    public Ficha(String equipo, String tipo,PanelCasilla[][] m, ImageIcon imagenFicha ){
+    public Ficha(String equipo, String tipo, ImageIcon imagenFicha ){
         this.equipo = equipo;
         this.tipo = tipo;
         this.imagenFicha = imagenFicha;
-        this.posicion = new CoordenadaFicha(m,this);
+       
     }
     
     
 
-    public CoordenadaFicha getPosicion() {
-        return posicion;
-    }
-    
-    public abstract void mover(PanelCasilla[][]m);
-    public abstract void matar(PanelCasilla[][]m);
+
+    public abstract void mover(PanelCasilla[][]m, ArrayList<PanelCasilla> movimientos, ArrayList<Color> coloresAntiguos);
+    public abstract void matar(PanelCasilla[][]m, ArrayList<PanelCasilla> movimientos, ArrayList<Color> coloresAntiguos);
 
     public String getEquipo() {
         return equipo;

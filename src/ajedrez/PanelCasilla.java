@@ -25,24 +25,25 @@ public class PanelCasilla extends JPanel{
 
     public void setFicha(Ficha ficha) {
         this.ficha = ficha;
+        ImageIcon imagen = ficha.getImagenFicha();
+        Icon icono = new ImageIcon(imagen.getImage().getScaledInstance((panelPadre.getWidth() / 8) - 10, (panelPadre.getHeight() / 8) - 10, 1));
+        this.casilla.setIcon(icono);
     }
     
     public void eliminarFicha(){
         this.ficha = null;
+        this.casilla.setIcon(null);
     }
     
-    
+    private JPanel panelPadre;
     
     public PanelCasilla(JPanel panelPadre){
-      
+        this.panelPadre = panelPadre;
         this.setLayout(null);
         
         this.casilla = new JLabel();
         this.casilla.setBounds(5, 0, panelPadre.getWidth() / 8, panelPadre.getHeight() / 8);
-        ImageIcon imagen = new ImageIcon("src/imagenes/arfil(1).png");
-        Icon icono = new ImageIcon(imagen.getImage().getScaledInstance((panelPadre.getWidth() / 8) - 10, (panelPadre.getHeight() / 8) - 10, 1));
         
-        casilla.setIcon(icono);
         add(casilla);
         
     }

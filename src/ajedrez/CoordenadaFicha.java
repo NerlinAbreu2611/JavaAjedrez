@@ -27,26 +27,39 @@ public class CoordenadaFicha {
     }
 
     
-    public CoordenadaFicha(PanelCasilla[][] casillas, Ficha ficha) {
-        this.casillas = casillas;
-        this.ficha = ficha;
-        localizarPosicion();
-    }
+   
     
-    public void localizarPosicion(){
+    public static CoordenadaFicha localizarPosicion(PanelCasilla [][] m, Ficha ficha){
+       // System.out.println(ficha.getEquipo() + "," + ficha.getPosicion());
        
-        for (int i = 0; i < casillas.length; i++) {
-            for (int j = 0; j < casillas.length; j++) {
-               if(casillas[i][j].equals(ficha)){
-                    this.fila = i;
-                    this.columna = j;
+           CoordenadaFicha coordenada = new CoordenadaFicha();
+       
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m.length; j++) {
+               
+               if(m[i][j].getFicha() != null && m[i][j].getFicha().equals(ficha)){
+                   coordenada.setFila(i);
+                   coordenada.setColumna(j);
                }
                 
             }
             
         }
   
+    
         
+        return coordenada;
+        
+              
+        
+    }
+
+    public void setFila(int fila) {
+        this.fila = fila;
+    }
+
+    public void setColumna(int columna) {
+        this.columna = columna;
     }
 
     
