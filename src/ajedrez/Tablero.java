@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package ajedrez;
-
+import javax.swing.border.Border;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -27,7 +27,8 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
     
     private ArrayList<PanelCasilla> movimientos = new ArrayList<>();
     private ArrayList<Color> coloresAntiguos = new ArrayList<>();
-    
+
+    private boolean isTurnoBlanco = true;
     private Color marron = new Color(139,69,19);
     private Color  blanco = Color.WHITE;
     public Tablero() {
@@ -45,6 +46,9 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
     public void crearTablero(){
         panelBase.setLayout(null);
         panelTablero.setBounds(10, 10, panelBase.getWidth() - 20, panelBase.getHeight() - 20);
+        panelTablero.setBackground(marron);
+        Border borde = BorderFactory.createLineBorder(Color.BLACK, 2); // Color y grosor
+        panelTablero.setBorder(borde);
         panelTablero.setLayout(new GridLayout(8,8));
        
         
@@ -61,16 +65,21 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
             }
         }
     }
-    
+   private String peonNegroImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon (1).png";
+   private String peonBlancoImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon.png";
+
+   private String equipoBlanco = "blanco";
+   private String equipoNegro = "negro";
     private void agregarFichas(){
-        Ficha ficha = new Peon("negro","C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon (1).png");
-        this.matrizCasillas[6][3].setFicha(ficha);
-        Ficha ficha4 = new Peon("negro","C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon (1).png");
-        this.matrizCasillas[6][4].setFicha(ficha4);
-        Ficha ficha3 = new Peon("blanco","C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon.png");
-        this.matrizCasillas[3][4].setFicha(ficha3);
-        Ficha ficha2 = new Peon("blanco","C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon.png");
-        this.matrizCasillas[3][2].setFicha(ficha2);
+        for (int i = 0; i < matrizCasillas.length; i++) {
+            for (int j = 0; j < matrizCasillas.length; j++) {
+                if(i == 1){
+                    matrizCasillas[i][j].setFicha(new Peon(equipoBlanco,peonBlancoImagen));
+                } else if (i == 6) {
+                    matrizCasillas[i][j].setFicha(new Peon(equipoNegro,peonNegroImagen));
+                }
+            }
+        }
 
        /* ImageIcon imagen = new ImageIcon("");
         Icon icono = new ImageIcon(imagen.getImage().getScaledInstance((this.getWidth() / 8) - 10, (this.getHeight() / 8) - 10, 1));
@@ -212,29 +221,34 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
              limpiarMovimientos();
          }
       }
-      
-      
-             //if(panel.getFicha().getEquipo().e)
-          
-       
-      
+
         
         
     }
     
 
-    
+
     public void moverFichas(PanelCasilla panel){
         if(panel.getFicha() != null){
            
             
 
             if(movimientos.isEmpty()){
+                System.out.println("Movimientos esta vacio");
 
-                 panel.getFicha().mover(matrizCasillas,this.movimientos, this.coloresAntiguos);
+                if(isTurnoBlanco && panel.getFicha().getEquipo().equalsIgnoreCase(equipoBlanco)){
+                    System.out.println("Verdadero");
+                    panel.getFicha().mover(matrizCasillas,this.movimientos, this.coloresAntiguos);
+
+                }else if(!isTurnoBlanco && panel.getFicha().getEquipo().equalsIgnoreCase(equipoNegro)){
+                    System.out.println("Falso");
+                    panel.getFicha().mover(matrizCasillas,this.movimientos, this.coloresAntiguos);
+
+                }
+
                 
             }else if(panel.getBackground().equals(Color.red)){
-                System.out.println("Si es rojo");
+
                 eliminarFicha(panel);
             }else{
                 limpiarMovimientos();
@@ -261,7 +275,16 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
     }
 
     public void eliminarFicha(PanelCasilla panel){
+        //Cambiar turno
+        if(isTurnoBlanco){
+            isTurnoBlanco = false;
+            System.out.println("Es turno de las negras");
+        }else{
+            System.out.println("Es turno de las blancas");
+            isTurnoBlanco = true;
+        }
         //Eliminar la ficha en el panel
+
         panel.eliminarFicha();
         //Poner la ficha que elimino a la otra en el panel de color rojo
         panel.setFicha(movimientos.get(0).getFicha());
@@ -273,6 +296,14 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
 
     
     public void trasladarFicha(PanelCasilla panel){
+        //Cambiar turno
+        if(isTurnoBlanco){
+            isTurnoBlanco = false;
+
+        }else{
+
+            isTurnoBlanco = true;
+        }
         Iterator<PanelCasilla> i = movimientos.iterator();
         PanelCasilla anterior = i.next();
         panel.setFicha(anterior.getFicha());
