@@ -68,18 +68,32 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
    private String peonNegroImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon (1).png";
    private String peonBlancoImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon.png";
 
+   private String arfilNegroImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\arfil(1).png";
+   private String arfilBlancoImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\arfil.png";
+
+   private String torreNegraImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\torre (1).png";
+
+   private String caballoBlaconImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\caballero.png";
+
+   private String caballoNegroImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\caballero (1).png";
+
+   private String torreBlancaImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\torre.png";
+
    private String equipoBlanco = "blanco";
    private String equipoNegro = "negro";
     private void agregarFichas(){
-        for (int i = 0; i < matrizCasillas.length; i++) {
+        /*for (int i = 0; i < matrizCasillas.length; i++) {
             for (int j = 0; j < matrizCasillas.length; j++) {
                 if(i == 1){
-                    matrizCasillas[i][j].setFicha(new Peon(equipoBlanco,peonBlancoImagen));
+                    matrizCasillas[i][j].setFicha(new Caballo(equipoBlanco,caballoBlaconImagen));
                 } else if (i == 6) {
-                    matrizCasillas[i][j].setFicha(new Peon(equipoNegro,peonNegroImagen));
+                    matrizCasillas[i][j].setFicha(new Caballo(equipoNegro,caballoNegroImagen));
                 }
             }
-        }
+        }*/
+
+       // matrizCasillas[2][0].setFicha(new Caballo(equipoBlanco,caballoBlaconImagen));
+       // matrizCasillas[3][0].setFicha(new Caballo(equipoNegro,caballoNegroImagen));
 
        /* ImageIcon imagen = new ImageIcon("");
         Icon icono = new ImageIcon(imagen.getImage().getScaledInstance((this.getWidth() / 8) - 10, (this.getHeight() / 8) - 10, 1));
@@ -234,21 +248,24 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
             
 
             if(movimientos.isEmpty()){
-                System.out.println("Movimientos esta vacio");
+
 
                 if(isTurnoBlanco && panel.getFicha().getEquipo().equalsIgnoreCase(equipoBlanco)){
-                    System.out.println("Verdadero");
+
                     panel.getFicha().mover(matrizCasillas,this.movimientos, this.coloresAntiguos);
 
                 }else if(!isTurnoBlanco && panel.getFicha().getEquipo().equalsIgnoreCase(equipoNegro)){
-                    System.out.println("Falso");
+
                     panel.getFicha().mover(matrizCasillas,this.movimientos, this.coloresAntiguos);
 
                 }
 
                 
             }else if(panel.getBackground().equals(Color.red)){
-
+                if(movimientos.get(0).getFicha() != null && movimientos.get(0).getFicha().getTipo().equalsIgnoreCase("peon")){
+                    Peon peon = (Peon) movimientos.get(0).getFicha();
+                    peon.setInicio(true);
+                }
                 eliminarFicha(panel);
             }else{
                 limpiarMovimientos();
@@ -259,15 +276,11 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
             
         }else{
             if(panel.getBackground().equals(verde)){
-                
-                for(PanelCasilla i: movimientos){
-                    if(i.getFicha() != null){
-                        if(i.getFicha().getTipo().equalsIgnoreCase("peon")){
-                            Peon p = (Peon) i.getFicha();
-                             p.setInicio(true);
-                        }
-                    }
+                if(movimientos.get(0).getFicha() != null && movimientos.get(0).getFicha().getTipo().equalsIgnoreCase("peon")){
+                    Peon peon = (Peon) movimientos.get(0).getFicha();
+                    peon.setInicio(true);
                 }
+
                 trasladarFicha(panel);
             }
           
@@ -278,12 +291,13 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
         //Cambiar turno
         if(isTurnoBlanco){
             isTurnoBlanco = false;
-            System.out.println("Es turno de las negras");
+
         }else{
-            System.out.println("Es turno de las blancas");
+
             isTurnoBlanco = true;
         }
         //Eliminar la ficha en el panel
+
 
         panel.eliminarFicha();
         //Poner la ficha que elimino a la otra en el panel de color rojo

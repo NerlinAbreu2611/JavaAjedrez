@@ -38,7 +38,8 @@ public class Peon extends Ficha{
     
     @Override
     public void mover(PanelCasilla[][] m, ArrayList<PanelCasilla> movimientos, ArrayList<Color> coloresAntiguos) {
-
+        CoordenadaFicha coordenada = CoordenadaFicha.localizarPosicion(m,this);
+        movimientos.add(m[coordenada.getFila()][coordenada.getColumna()]);
         if(this.getEquipo().equals("negro")){
             moverNegra(m, movimientos, coloresAntiguos);
             matar(m, movimientos, coloresAntiguos);
@@ -65,7 +66,7 @@ public class Peon extends Ficha{
     public void moverBlanca(PanelCasilla[][] m, ArrayList<PanelCasilla> movimientos, ArrayList<Color> coloresAntiguos){
         CoordenadaFicha coordenada = CoordenadaFicha.localizarPosicion(m, this);
 
-        if(inicio == false){
+        if(inicio == false && m[coordenada.getFila() + 1][coordenada.getColumna()].getFicha() == null && m[coordenada.getFila() + 2][coordenada.getColumna()].getFicha() == null){
 
 
 
@@ -75,7 +76,7 @@ public class Peon extends Ficha{
             m[coordenada.getFila() + 1][coordenada.getColumna()].setBackground(verde);
             m[coordenada.getFila() + 2][coordenada.getColumna()].setBackground(verde);
 
-            movimientos.add(m[coordenada.getFila()][coordenada.getColumna()]);
+
             movimientos.add(m[coordenada.getFila() + 1][coordenada.getColumna()]);
             movimientos.add(m[coordenada.getFila() + 2][coordenada.getColumna()]);
         }else{
@@ -83,7 +84,7 @@ public class Peon extends Ficha{
                 coloresAntiguos.add(m[coordenada.getFila() + 1][coordenada.getColumna()].getBackground());
                 m[coordenada.getFila() + 1][coordenada.getColumna()].setBackground(verde);
 
-                movimientos.add(m[coordenada.getFila()][coordenada.getColumna()]);
+
                 movimientos.add(m[coordenada.getFila() + 1][coordenada.getColumna()]);
             }
         }
@@ -92,7 +93,7 @@ public class Peon extends Ficha{
     public void moverNegra(PanelCasilla[][] m, ArrayList<PanelCasilla> movimientos, ArrayList<Color> coloresAntiguos){
         CoordenadaFicha coordenada = CoordenadaFicha.localizarPosicion(m, this);
 
-        if(inicio == false){
+        if(inicio == false && m[coordenada.getFila() - 1][coordenada.getColumna()].getFicha() == null && m[coordenada.getFila() - 2][coordenada.getColumna()].getFicha() == null){
 
 
 
@@ -102,7 +103,7 @@ public class Peon extends Ficha{
             m[coordenada.getFila() - 1][coordenada.getColumna()].setBackground(verde);
             m[coordenada.getFila() - 2][coordenada.getColumna()].setBackground(verde);
 
-            movimientos.add(m[coordenada.getFila()][coordenada.getColumna()]);
+
             movimientos.add(m[coordenada.getFila() - 1][coordenada.getColumna()]);
             movimientos.add(m[coordenada.getFila() - 2][coordenada.getColumna()]);
         }else{
@@ -110,7 +111,7 @@ public class Peon extends Ficha{
                 coloresAntiguos.add(m[coordenada.getFila() - 1][coordenada.getColumna()].getBackground());
                 m[coordenada.getFila() - 1][coordenada.getColumna()].setBackground(verde);
 
-                movimientos.add(m[coordenada.getFila()][coordenada.getColumna()]);
+
                 movimientos.add(m[coordenada.getFila() - 1][coordenada.getColumna()]);
             }
         }
@@ -136,7 +137,7 @@ public class Peon extends Ficha{
                     //Cambiar color de la casilla al rojo
                     m[coor.getFila() - 1][coor.getColumna() - 1].setBackground(Color.red);
                     //Agregar a la lista de movimientos
-                    movimientos.add(m[coor.getFila()][coor.getColumna()]);
+
                     movimientos.add(m[coor.getFila() - 1][coor.getColumna() - 1]);
                 }
 
@@ -183,8 +184,7 @@ public class Peon extends Ficha{
                if(!equipo.equalsIgnoreCase("blanco")){
                    //Si se cumple la condicion se debe marcar la casilla de color rojo
 
-                   //Pero primero agrego mi ficha blanca a la coleccion de movimientos
-                   movimientos.add(m[coor.getFila()][coor.getColumna()]);
+
                    //luego guardo el color de la ficha a matar
                    coloresAntiguos.add(m[coor.getFila() + 1][coor.getColumna() - 1].getBackground());
                    //Ahora le cambio el color al color rojo para indicar que la ficha puede ser comida
@@ -207,8 +207,6 @@ public class Peon extends Ficha{
                 if(!equipo.equalsIgnoreCase("blanco")){
                     //Si se cumple la condicion se debe marcar la casilla de color rojo
 
-                    //Pero primero agrego mi ficha blanca a la coleccion de movimientos
-                    movimientos.add(m[coor.getFila()][coor.getColumna()]);
                     //luego guardo el color de la ficha a matar
                     coloresAntiguos.add(m[coor.getFila() + 1][coor.getColumna() + 1].getBackground());
                     //Ahora le cambio el color al color rojo para indicar que la ficha puede ser comida
