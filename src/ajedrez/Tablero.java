@@ -6,6 +6,8 @@ package ajedrez;
 import javax.swing.border.Border;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,21 +20,33 @@ import javax.swing.*;
  *
  * @author elmen
  */
+
+
+
 public class Tablero extends javax.swing.JFrame implements  MouseListener  {
 
     /**
      * Creates new form Tablero
      */
     
+    private JPanel jugadorNegro;
+    private JPanel jugadorBlanco;
+    private Font fuente = new Font("Monospaced", Font.BOLD, 13);
     
     private ArrayList<PanelCasilla> movimientos = new ArrayList<>();
     private ArrayList<Color> coloresAntiguos = new ArrayList<>();
 
+    private JLabel quedanNegras;
+    private JLabel quedanBlancas;
     private boolean isTurnoBlanco = true;
     private Color marron = new Color(139,69,19);
     private Color  blanco = Color.WHITE;
     public Tablero() {
         initComponents();
+        System.out.println(this.getSize().height + " " + this.getSize().width);
+        
+        this.setSize(new Dimension(900,580));
+        
         panelBase.setBackground(marron);
         this.setTitle("Tablero de ajedrez");
         crearTablero();
@@ -47,12 +61,80 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
     private ArrayList<Ficha> fichasBlancas = new ArrayList<>();
     public void crearTablero(){
         panelBase.setLayout(null);
+        
         panelTablero.setBounds(10, 10, panelBase.getWidth() - 20, panelBase.getHeight() - 20);
         panelTablero.setBackground(Color.black);
        // Border borde = BorderFactory.createLineBorder(Color.BLACK, 3); // Color y grosor
        // panelTablero.setBorder(borde);
         panelTablero.setLayout(new GridLayout(8,8));
-       
+        
+        System.out.println(panelTablero.getSize().getWidth() + " " + panelTablero.getSize().getHeight());
+      
+        jugadorNegro = new JPanel();
+        
+        jugadorNegro.setBounds((int) (panelTablero.getSize().getWidth()+ 15), + 15, 150, 200);
+             
+        jugadorNegro.setBackground(blanco);
+        jugadorNegro.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        
+        panelBase.add(jugadorNegro);
+        
+         jugadorBlanco = new JPanel();
+        
+        jugadorBlanco.setBounds((int) (panelTablero.getSize().getWidth()+ 15), 230, 150, 200);
+             
+        jugadorBlanco.setBackground(blanco);
+
+        panelBase.add(jugadorBlanco);
+        
+        jugadorNegro.setLayout(null);
+        JLabel label1 = new JLabel("  JUGADOR NEGRO ");
+        label1.setFont(fuente);
+        label1.setBounds(0, 0, 150, 30);
+        label1.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+        
+        JLabel imagen1 = new JLabel();
+        imagen1.setBounds(0,30,150,140);
+        ImageIcon imagenFicha1 = new ImageIcon(caballoNegroImagen);
+        Icon icono1 = new ImageIcon(imagenFicha1.getImage().getScaledInstance(imagen1.getWidth() - 5 , imagen1.getHeight() - 5, 1));
+        imagen1.setIcon(icono1);
+       // imagen1.setBorder(BorderFactory.createLineBorder(Color.BLACK,2));
+        
+        quedanNegras = new JLabel();
+        quedanNegras.setFont(fuente);
+        quedanNegras.setBounds(0,170,150,30);
+        quedanNegras.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+        
+        
+        jugadorNegro.add(label1);
+        jugadorNegro.add(imagen1);
+        jugadorNegro.add(quedanNegras);
+        
+        jugadorBlanco.setLayout(null);
+        JLabel label2 = new JLabel("  JUGADOR BLANCO ");
+        label2.setFont(fuente);
+        label2.setBounds(0, 0, 150, 30);
+        label2.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+        
+        JLabel imagen2 = new JLabel();
+        imagen2.setBounds(0,30,150,140);
+        ImageIcon imagenFicha2 = new ImageIcon(caballoBlancoImagen);
+        Icon icono2 = new ImageIcon(imagenFicha2.getImage().getScaledInstance(imagen2.getWidth() - 5 , imagen2.getHeight() - 5, 1));
+        imagen2.setIcon(icono2);
+      
+        this.setIconImage(imagenFicha1.getImage());
+        quedanBlancas= new JLabel("");
+        quedanBlancas.setFont(fuente);
+        quedanBlancas.setBounds(0,170,150,30);
+        quedanBlancas.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+        
+        
+        jugadorBlanco.add(label2);
+        jugadorBlanco.add(imagen2);
+        jugadorBlanco.add(quedanBlancas);
+
+        jugadorBlanco.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+        
         
         for(int i = 0;i<8;i++){
             for(int j=0;j<8;j++){
@@ -80,7 +162,7 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
 
    private String torreNegraImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\torre (1).png";
 
-   private String caballoBlaconImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\caballero.png";
+   private String caballoBlancoImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\caballero.png";
 
    private String caballoNegroImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\caballero (1).png";
 
@@ -124,9 +206,9 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
         fichasNegras.add(matrizCasillas[0][6].getFicha());
 
         //Agregar caballos blancos
-        matrizCasillas[7][1].setFicha(new Caballo(equipoBlanco,caballoBlaconImagen));
+        matrizCasillas[7][1].setFicha(new Caballo(equipoBlanco,caballoBlancoImagen));
         fichasBlancas.add(matrizCasillas[7][1].getFicha());
-        matrizCasillas[7][6].setFicha(new Caballo(equipoBlanco,caballoBlaconImagen));
+        matrizCasillas[7][6].setFicha(new Caballo(equipoBlanco,caballoBlancoImagen));
         fichasBlancas.add(matrizCasillas[7][6].getFicha());
 
         //Agregar arfiles negros
@@ -156,6 +238,11 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
         //agregar reyna blanca
         matrizCasillas[7][4].setFicha(new Dama(equipoBlanco,damaBlancaImagen));
         fichasBlancas.add(matrizCasillas[0][4].getFicha());
+        
+        String quedan = "CHESS REMAINING" + " " +fichasNegras.size();
+        this.quedanNegras.setText(quedan);
+        quedan = "CHESS REMAINING" + " "+fichasBlancas.size();
+        this.quedanBlancas.setText(quedan);
 
     }
     
@@ -364,6 +451,12 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
         }
 
         fichas.remove(indice);
+        
+        String quedan = "CHESS REMAINING" + " " +fichasNegras.size();
+        this.quedanNegras.setText(quedan);
+        quedan = "CHESS REMAINING" + " "+fichasBlancas.size();
+        this.quedanBlancas.setText(quedan);
+        
 
     }
 
