@@ -55,6 +55,7 @@ public class Peon extends Ficha{
 
         //Verificar si mi ficha es negra o blanca
         if(this.getEquipo().equals("negro")){
+
             matarBlanca(m, movimientos, coloresAntiguos);
 
         }else{
@@ -63,7 +64,7 @@ public class Peon extends Ficha{
 
     }
 
-    public void moverBlanca(PanelCasilla[][] m, ArrayList<PanelCasilla> movimientos, ArrayList<Color> coloresAntiguos){
+    public void moverNegra(PanelCasilla[][] m, ArrayList<PanelCasilla> movimientos, ArrayList<Color> coloresAntiguos){
         CoordenadaFicha coordenada = CoordenadaFicha.localizarPosicion(m, this);
 
         if(inicio == false && m[coordenada.getFila() + 1][coordenada.getColumna()].getFicha() == null && m[coordenada.getFila() + 2][coordenada.getColumna()].getFicha() == null){
@@ -90,7 +91,7 @@ public class Peon extends Ficha{
         }
     }
 
-    public void moverNegra(PanelCasilla[][] m, ArrayList<PanelCasilla> movimientos, ArrayList<Color> coloresAntiguos){
+    public void moverBlanca(PanelCasilla[][] m, ArrayList<PanelCasilla> movimientos, ArrayList<Color> coloresAntiguos){
         CoordenadaFicha coordenada = CoordenadaFicha.localizarPosicion(m, this);
 
         if(inicio == false && m[coordenada.getFila() - 1][coordenada.getColumna()].getFicha() == null && m[coordenada.getFila() - 2][coordenada.getColumna()].getFicha() == null){
@@ -118,7 +119,7 @@ public class Peon extends Ficha{
     }
 
 
-    private void matarBlanca(PanelCasilla[][] m, ArrayList<PanelCasilla> movimientos, ArrayList<Color> coloresAntiguos){
+    private void matarNegra(PanelCasilla[][] m, ArrayList<PanelCasilla> movimientos, ArrayList<Color> coloresAntiguos){
         CoordenadaFicha coor = CoordenadaFicha.localizarPosicion(m,this);
 
         //Verificar limite por izquierda
@@ -169,19 +170,21 @@ public class Peon extends Ficha{
 
     }
 
-    private void matarNegra(PanelCasilla[][] m, ArrayList<PanelCasilla> movimientos, ArrayList<Color> coloresAntiguos){
+    private void matarBlanca(PanelCasilla[][] m, ArrayList<PanelCasilla> movimientos, ArrayList<Color> coloresAntiguos){
         CoordenadaFicha coor = CoordenadaFicha.localizarPosicion(m,this);
 
       //Verificar limite por izquierda
+
        if(coor.getFila() + 1 <= m.length - 1 && coor.getColumna() - 1 >= 0){
 
            //Verificar si hay una ficha en esa posicion
            if(m[coor.getFila() + 1][coor.getColumna() - 1].getFicha() != null  ){
 
                String equipo = m[coor.getFila() + 1][coor.getColumna() - 1].getFicha().getEquipo();
+
                //Verificar si el equipo es distinto del mio
 
-               if(!equipo.equalsIgnoreCase("blanco")){
+               if(!this.getEquipo().equalsIgnoreCase(equipo)){
                    //Si se cumple la condicion se debe marcar la casilla de color rojo
 
 
@@ -204,8 +207,10 @@ public class Peon extends Ficha{
                 String equipo = m[coor.getFila() + 1][coor.getColumna() + 1].getFicha().getEquipo();
                 //Verificar si el equipo es distinto del mio
 
-                if(!equipo.equalsIgnoreCase("blanco")){
+
+                if(!this.getEquipo().equalsIgnoreCase(equipo)){
                     //Si se cumple la condicion se debe marcar la casilla de color rojo
+
 
                     //luego guardo el color de la ficha a matar
                     coloresAntiguos.add(m[coor.getFila() + 1][coor.getColumna() + 1].getBackground());

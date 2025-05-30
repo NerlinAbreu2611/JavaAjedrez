@@ -43,18 +43,21 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
     }
     
     private  PanelCasilla [][] matrizCasillas = new PanelCasilla[8][8];
+    private ArrayList<Ficha> fichasNegras = new ArrayList<>();
+    private ArrayList<Ficha> fichasBlancas = new ArrayList<>();
     public void crearTablero(){
         panelBase.setLayout(null);
         panelTablero.setBounds(10, 10, panelBase.getWidth() - 20, panelBase.getHeight() - 20);
-        panelTablero.setBackground(marron);
-        Border borde = BorderFactory.createLineBorder(Color.BLACK, 2); // Color y grosor
-        panelTablero.setBorder(borde);
+        panelTablero.setBackground(Color.black);
+       // Border borde = BorderFactory.createLineBorder(Color.BLACK, 3); // Color y grosor
+       // panelTablero.setBorder(borde);
         panelTablero.setLayout(new GridLayout(8,8));
        
         
         for(int i = 0;i<8;i++){
             for(int j=0;j<8;j++){
                 PanelCasilla casilla = new PanelCasilla(panelTablero);
+                casilla.setBorder(BorderFactory.createLineBorder(Color.black,1));
                 if((i+j) % 2 == 0){
                     casilla.setBackground(marron);
                 }else{
@@ -65,6 +68,10 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
             }
         }
     }
+
+
+   private String damaNegraImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\reina (1).png";
+    private String damaBlancaImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\reina.png";
    private String peonNegroImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon (1).png";
    private String peonBlancoImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\peon.png";
 
@@ -79,26 +86,77 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
 
    private String torreBlancaImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\torre.png";
 
+   private String reyBlancoImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\rey.png";
+   private String reyNegroImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\rey (1).png";
    private String equipoBlanco = "blanco";
    private String equipoNegro = "negro";
     private void agregarFichas(){
-        /*for (int i = 0; i < matrizCasillas.length; i++) {
+        //Agregar peones
+        for (int i = 0; i < matrizCasillas.length; i++) {
             for (int j = 0; j < matrizCasillas.length; j++) {
                 if(i == 1){
-                    matrizCasillas[i][j].setFicha(new Caballo(equipoBlanco,caballoBlaconImagen));
+                    matrizCasillas[i][j].setFicha(new Peon(equipoNegro,peonNegroImagen));
+                    fichasNegras.add(matrizCasillas[i][j].getFicha());
+
                 } else if (i == 6) {
-                    matrizCasillas[i][j].setFicha(new Caballo(equipoNegro,caballoNegroImagen));
+                    matrizCasillas[i][j].setFicha(new Peon(equipoBlanco,peonBlancoImagen));
+                    fichasBlancas.add(matrizCasillas[i][j].getFicha());
                 }
             }
-        }*/
+        }
 
-       // matrizCasillas[2][0].setFicha(new Caballo(equipoBlanco,caballoBlaconImagen));
-       // matrizCasillas[3][0].setFicha(new Caballo(equipoNegro,caballoNegroImagen));
+        //Agregar torres negras
+        matrizCasillas[0][0].setFicha(new Torre(equipoNegro,torreNegraImagen));
+        fichasNegras.add(matrizCasillas[0][0].getFicha());
+        matrizCasillas[0][7].setFicha(new Torre(equipoNegro,torreNegraImagen));
+        fichasNegras.add(matrizCasillas[0][7].getFicha());
 
-       /* ImageIcon imagen = new ImageIcon("");
-        Icon icono = new ImageIcon(imagen.getImage().getScaledInstance((this.getWidth() / 8) - 10, (this.getHeight() / 8) - 10, 1));
+        //Agregar torres blancas
+        matrizCasillas[7][7].setFicha(new Torre(equipoBlanco,torreBlancaImagen));
+        fichasBlancas.add(matrizCasillas[7][7].getFicha());
+        matrizCasillas[7][0].setFicha(new Torre(equipoBlanco,torreBlancaImagen));
+        fichasBlancas.add(matrizCasillas[7][0].getFicha());
 
-        this.matrizCasillas[3][2].getCasilla().setIcon(icono);*/
+        //Agregar caballos negros
+        matrizCasillas[0][1].setFicha(new Caballo(equipoNegro,caballoNegroImagen));
+        fichasNegras.add(matrizCasillas[0][1].getFicha());
+        matrizCasillas[0][6].setFicha(new Caballo(equipoNegro,caballoNegroImagen));
+        fichasNegras.add(matrizCasillas[0][6].getFicha());
+
+        //Agregar caballos blancos
+        matrizCasillas[7][1].setFicha(new Caballo(equipoBlanco,caballoBlaconImagen));
+        fichasBlancas.add(matrizCasillas[7][1].getFicha());
+        matrizCasillas[7][6].setFicha(new Caballo(equipoBlanco,caballoBlaconImagen));
+        fichasBlancas.add(matrizCasillas[7][6].getFicha());
+
+        //Agregar arfiles negros
+        matrizCasillas[0][2].setFicha(new Arfil(equipoNegro,arfilNegroImagen));
+        fichasNegras.add(matrizCasillas[0][2].getFicha());
+        matrizCasillas[0][5].setFicha(new Arfil(equipoNegro,arfilNegroImagen));
+        fichasNegras.add(matrizCasillas[0][5].getFicha());
+
+        //agregar arfiles blancos
+        matrizCasillas[7][2].setFicha(new Arfil(equipoBlanco,arfilBlancoImagen));
+        fichasBlancas.add(matrizCasillas[7][2].getFicha());
+        matrizCasillas[7][5].setFicha(new Arfil(equipoBlanco,arfilBlancoImagen));
+        fichasBlancas.add(matrizCasillas[7][5].getFicha());
+
+        //agregar rey negro
+        matrizCasillas[0][3].setFicha(new Rey(equipoNegro,reyNegroImagen));
+        fichasNegras.add(matrizCasillas[0][3].getFicha());
+
+        //agregar rey blanco
+        matrizCasillas[7][3].setFicha(new Rey(equipoBlanco,reyBlancoImagen));
+        fichasBlancas.add(matrizCasillas[7][3].getFicha());
+
+        //agregar reyna negra
+        matrizCasillas[0][4].setFicha(new Dama(equipoNegro,damaNegraImagen));
+        fichasNegras.add(matrizCasillas[0][4].getFicha());
+
+        //agregar reyna blanca
+        matrizCasillas[7][4].setFicha(new Dama(equipoBlanco,damaBlancaImagen));
+        fichasBlancas.add(matrizCasillas[0][4].getFicha());
+
     }
     
     private boolean turnoBlanco = true;
@@ -287,14 +345,37 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
         }
     }
 
+    private void removerFicha(ArrayList<Ficha> fichas, Ficha f){
+        int indice = 0;
+
+        for(Ficha i: fichas){
+
+            if(i.equals(f)){
+
+                break;
+            }
+            indice++;
+        }
+
+        if(f.getEquipo().equalsIgnoreCase("blanco") && f.getTipo().equalsIgnoreCase("rey")){
+            JOptionPane.showMessageDialog(this,"EL JUGADOR NEGRO HA GANADO");
+        }else if(f.getTipo().equalsIgnoreCase("rey")){
+            JOptionPane.showMessageDialog(this,"El JUGADOR BLANCO HA GANADO");
+        }
+
+        fichas.remove(indice);
+
+    }
+
     public void eliminarFicha(PanelCasilla panel){
         //Cambiar turno
         if(isTurnoBlanco){
             isTurnoBlanco = false;
-
+            removerFicha(fichasNegras,panel.getFicha());
         }else{
 
             isTurnoBlanco = true;
+            removerFicha(fichasBlancas,panel.getFicha());
         }
         //Eliminar la ficha en el panel
 
