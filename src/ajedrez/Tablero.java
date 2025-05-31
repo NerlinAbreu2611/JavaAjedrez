@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package ajedrez;
+import javax.sound.sampled.*;
 import javax.swing.border.Border;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,6 +13,7 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.*;
@@ -43,12 +45,13 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
     private Color  blanco = Color.WHITE;
     public Tablero() {
         initComponents();
-        System.out.println(this.getSize().height + " " + this.getSize().width);
+
         
         this.setSize(new Dimension(900,580));
         
         panelBase.setBackground(marron);
         this.setTitle("Tablero de ajedrez");
+        this.setResizable(false);
         crearTablero();
         this.setLocationRelativeTo(null);
         this.agregarEventosCasillas();
@@ -68,7 +71,7 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
        // panelTablero.setBorder(borde);
         panelTablero.setLayout(new GridLayout(8,8));
         
-        System.out.println(panelTablero.getSize().getWidth() + " " + panelTablero.getSize().getHeight());
+
       
         jugadorNegro = new JPanel();
         
@@ -373,9 +376,11 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
       if(panel.getFicha() != null || panel.getBackground().equals(verde) || panel.getBackground().equals(Color.red)){
 
 
+          reproducirSonido("C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\sonido\\351518__mh2o__chess_move_on_alabaster.wav");
                 moverFichas(panel);
 
       }else{
+
          if(!movimientos.isEmpty()){
              limpiarMovimientos();
          }
@@ -432,6 +437,40 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
         }
     }
 
+    public static void reproducirSonido(String ruta) {
+        try {
+            File archivo = new File(ruta);
+            AudioInputStream original = AudioSystem.getAudioInputStream(archivo);
+
+            // Convertir a formato compatible
+            AudioFormat formatoCompatible = new AudioFormat(
+                    AudioFormat.Encoding.PCM_SIGNED,
+                    44100,
+                    16,
+                    original.getFormat().getChannels(),
+                    original.getFormat().getChannels() * 2,
+                    44100,
+                    false
+            );
+
+            AudioInputStream audioCompatible = AudioSystem.getAudioInputStream(formatoCompatible, original);
+
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioCompatible);
+            clip.start();
+
+            clip.addLineListener(event -> {
+                if (event.getType() == LineEvent.Type.STOP) {
+                    clip.close();
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void removerFicha(ArrayList<Ficha> fichas, Ficha f){
         int indice = 0;
 
@@ -462,6 +501,7 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
 
     public void eliminarFicha(PanelCasilla panel){
         //Cambiar turno
+
         if(isTurnoBlanco){
             isTurnoBlanco = false;
             removerFicha(fichasNegras,panel.getFicha());

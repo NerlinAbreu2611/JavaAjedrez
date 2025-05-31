@@ -127,7 +127,7 @@ public class Arfil extends  Ficha{
 
         while(c.getFila() + contFila <= m.length - 1 && c.getColumna() + contColumna <= m.length - 1){
             //Determinar si hay una ficha en la posicion dada
-            System.out.println("4");
+
             if(m[c.getFila() + contFila][c.getColumna() + contColumna].getFicha() == null){
 
                 //Agregar la casilla al rango de movimientos
