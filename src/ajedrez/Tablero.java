@@ -3,19 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package ajedrez;
+import Conexion.ControladorTablero;
+import Modelo.FichaModelo;
+import Modelo.Partida;
+
 import javax.sound.sampled.*;
-import javax.swing.border.Border;
-import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import javax.swing.*;
 
 /**
@@ -25,7 +27,7 @@ import javax.swing.*;
 
 
 
-public class Tablero extends javax.swing.JFrame implements  MouseListener  {
+public class Tablero extends javax.swing.JFrame implements  MouseListener {
 
     /**
      * Creates new form Tablero
@@ -40,7 +42,8 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
 
     private JLabel quedanNegras;
     private JLabel quedanBlancas;
-    private boolean isTurnoBlanco = true;
+
+
     private Color marron = new Color(139,69,19);
     private Color  blanco = Color.WHITE;
     public Tablero() {
@@ -54,9 +57,169 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
         this.setResizable(false);
         crearTablero();
         this.setLocationRelativeTo(null);
-        this.agregarEventosCasillas();
+
+
+    }
+
+    private JFrame menu;
+
+    private void accionarCierreDeVentana(JFrame menu){
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+
+
+                int opcion = JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Deseas guardar partida?",
+                        "Confirmar",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+
+
+                if(opcion == JOptionPane.YES_NO_OPTION) {
+
+                    if(partida != null){
+                        if(ControladorTablero.existeLaPartida(partida)){
+                            if(ControladorTablero.borrarPartida(partida)){
+                                ControladorTablero con = new ControladorTablero();
+                                con.guardar(fichasBlancas, fichasNegras, matrizCasillas,turnoBlanco);
+                            }
+                        }
+                    }else{
+                        ControladorTablero con = new ControladorTablero();
+                        con.guardar(fichasBlancas, fichasNegras, matrizCasillas,turnoBlanco);
+                    }
+                }
+                    setVisible(false);
+                    dispose();
+                    menu.setVisible(true);
+
+            }
+        });
+    }
+
+    private Partida partida;
+    public Tablero(JFrame menu){
+        this();
         this.agregarFichas();
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
+        accionarCierreDeVentana(menu);
+        this.agregarEventosCasillas();
+    }
+
+    public Tablero(JFrame menu, List<FichaModelo> fichasModelo, Partida turno){
+        this();
+        this.agregarFichasConModelo(fichasModelo);
+        this.menu = menu;
+        turnoBlanco = turno.isTurnoBlanco();
+        partida = turno;
+        this.setVisible(true);
+        accionarCierreDeVentana(menu);
+        this.agregarEventosCasillas();
+    }
+    
+    public void agregarFichasConModelo(List<FichaModelo> fichasModelo){
+        
+        fichasModelo.forEach(f->{
+            
+            if(f.getNombre().equalsIgnoreCase("peon")){
+
+                if(f.getEquipo().equalsIgnoreCase("blanco")){
+                    Peon fi = new Peon(f.getEquipo(),peonBlancoImagen);
+                    matrizCasillas[f.getX()][f.getY()].setFicha(fi);
+                    fichasBlancas.add(fi);
+                    if(f.getX() < 6){
+                        fi.setInicio(true);
+                    }
+                }else {
+                    Peon fi = new Peon(f.getEquipo(),peonNegroImagen);
+                    matrizCasillas[f.getX()][f.getY()].setFicha(fi);
+                    fichasNegras.add(fi);
+                    if(f.getX() > 1){
+                        fi.setInicio(true);
+                    }
+
+                }
+
+            } else if (f.getNombre().equalsIgnoreCase("caballo")) {
+
+                if(f.getEquipo().equalsIgnoreCase("blanco")){
+                    Ficha fi = new Caballo(f.getEquipo(),caballoBlancoImagen);
+                    matrizCasillas[f.getX()][f.getY()].setFicha(fi);
+                    fichasBlancas.add(fi);
+
+                }else {
+                    Ficha fi = new Caballo(f.getEquipo(),caballoNegroImagen);
+                    matrizCasillas[f.getX()][f.getY()].setFicha(fi);
+                    fichasNegras.add(fi);
+
+                }
+                
+            } else if (f.getNombre().equalsIgnoreCase("rey")) {
+
+                if(f.getEquipo().equalsIgnoreCase("blanco")){
+                    Ficha fi = new Rey(f.getEquipo(),reyBlancoImagen);
+                    matrizCasillas[f.getX()][f.getY()].setFicha(fi);
+                    fichasBlancas.add(fi);
+
+                }else {
+                    Ficha fi = new Rey(f.getEquipo(),reyNegroImagen);
+                    matrizCasillas[f.getX()][f.getY()].setFicha(fi);
+                    fichasNegras.add(fi);
+                }
+
+            } else if (f.getNombre().equalsIgnoreCase("arfil")) {
+
+                if(f.getEquipo().equalsIgnoreCase("blanco")){
+                    Ficha fi = new Arfil(f.getEquipo(),arfilBlancoImagen);
+                    matrizCasillas[f.getX()][f.getY()].setFicha(fi);
+                    fichasBlancas.add(fi);
+
+                }else {
+                    Ficha fi = new Arfil(f.getEquipo(),arfilNegroImagen);
+                    matrizCasillas[f.getX()][f.getY()].setFicha(fi);
+                    fichasNegras.add(fi);
+
+                }
+                
+            } else if (f.getNombre().equalsIgnoreCase("dama")) {
+
+                if(f.getEquipo().equalsIgnoreCase("blanco")){
+                    Ficha fi = new Dama(f.getEquipo(),damaBlancaImagen);
+                    matrizCasillas[f.getX()][f.getY()].setFicha(fi);
+                    fichasBlancas.add(fi);
+
+                }else {
+                    Ficha fi = new Dama(f.getEquipo(),damaNegraImagen);
+                    matrizCasillas[f.getX()][f.getY()].setFicha(fi);
+                    fichasNegras.add(fi);
+
+                }
+                
+            } else if (f.getNombre().equalsIgnoreCase("torre")) {
+                if(f.getEquipo().equalsIgnoreCase("blanco")){
+                    Ficha fi = new Torre(f.getEquipo(),torreBlancaImagen);
+                    matrizCasillas[f.getX()][f.getY()].setFicha(fi);
+                    fichasBlancas.add(fi);
+
+                }else {
+                    Ficha fi = new Torre(f.getEquipo(),torreNegraImagen);
+                    matrizCasillas[f.getX()][f.getY()].setFicha(fi);
+                    fichasNegras.add(fi);
+
+                }
+            }
+
+        });
+
+        String quedan = "CHESS REMAINING" + " " +fichasNegras.size();
+        this.quedanNegras.setText(quedan);
+        quedan = "CHESS REMAINING" + " "+fichasBlancas.size();
+        this.quedanBlancas.setText(quedan);
     }
     
     private  PanelCasilla [][] matrizCasillas = new PanelCasilla[8][8];
@@ -175,6 +338,28 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
    private String reyNegroImagen = "C:\\Users\\elmen\\Desktop\\Ajedrez\\JavaAjedrez\\src\\imagenes\\rey (1).png";
    private String equipoBlanco = "blanco";
    private String equipoNegro = "negro";
+
+   public void mapearFichas(){
+       System.out.println("Fichas negras:");
+       fichasNegras.forEach(f ->{
+
+           CoordenadaFicha coordenadaFicha = CoordenadaFicha.localizarPosicion(matrizCasillas, f);
+           System.out.println(f.getTipo() + " encontrada en la posicion " + coordenadaFicha.getFila() + "," + coordenadaFicha.getColumna());
+
+
+       });
+
+       System.out.println("Fichas blancas");
+
+       fichasBlancas.forEach(f ->{
+
+           CoordenadaFicha coordenadaFicha = CoordenadaFicha.localizarPosicion(matrizCasillas, f);
+           System.out.println(f.getTipo() + " encontrada en la posicion " + coordenadaFicha.getFila() + "," + coordenadaFicha.getColumna());
+
+
+       });
+
+   }
     private void agregarFichas(){
         //Agregar peones
         for (int i = 0; i < matrizCasillas.length; i++) {
@@ -240,7 +425,7 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
 
         //agregar reyna blanca
         matrizCasillas[7][4].setFicha(new Dama(equipoBlanco,damaBlancaImagen));
-        fichasBlancas.add(matrizCasillas[0][4].getFicha());
+        fichasBlancas.add(matrizCasillas[7][4].getFicha());
         
         String quedan = "CHESS REMAINING" + " " +fichasNegras.size();
         this.quedanNegras.setText(quedan);
@@ -250,7 +435,7 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
     }
     
     private boolean turnoBlanco = true;
-    private boolean turnoNegro = false;
+
     
     
     public void agregarEventosCasillas(){
@@ -400,11 +585,11 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
             if(movimientos.isEmpty()){
 
 
-                if(isTurnoBlanco && panel.getFicha().getEquipo().equalsIgnoreCase(equipoBlanco)){
+                if(turnoBlanco && panel.getFicha().getEquipo().equalsIgnoreCase(equipoBlanco)){
 
                     panel.getFicha().mover(matrizCasillas,this.movimientos, this.coloresAntiguos);
 
-                }else if(!isTurnoBlanco && panel.getFicha().getEquipo().equalsIgnoreCase(equipoNegro)){
+                }else if(!turnoBlanco && panel.getFicha().getEquipo().equalsIgnoreCase(equipoNegro)){
 
                     panel.getFicha().mover(matrizCasillas,this.movimientos, this.coloresAntiguos);
 
@@ -485,8 +670,10 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
 
         if(f.getEquipo().equalsIgnoreCase("blanco") && f.getTipo().equalsIgnoreCase("rey")){
             JOptionPane.showMessageDialog(this,"EL JUGADOR NEGRO HA GANADO");
+            finalizarPartida();
         }else if(f.getTipo().equalsIgnoreCase("rey")){
             JOptionPane.showMessageDialog(this,"El JUGADOR BLANCO HA GANADO");
+            finalizarPartida();
         }
 
         fichas.remove(indice);
@@ -495,19 +682,30 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
         this.quedanNegras.setText(quedan);
         quedan = "CHESS REMAINING" + " "+fichasBlancas.size();
         this.quedanBlancas.setText(quedan);
+
         
 
+    }
+
+    private void finalizarPartida(){
+        if(ControladorTablero.existeLaPartida(partida)){
+            if(ControladorTablero.borrarPartida(partida)){
+                setVisible(false);
+                menu.setVisible(true);
+                dispose();
+            }
+        }
     }
 
     public void eliminarFicha(PanelCasilla panel){
         //Cambiar turno
 
-        if(isTurnoBlanco){
-            isTurnoBlanco = false;
+        if(turnoBlanco){
+            turnoBlanco = false;
             removerFicha(fichasNegras,panel.getFicha());
         }else{
 
-            isTurnoBlanco = true;
+            turnoBlanco = true;
             removerFicha(fichasBlancas,panel.getFicha());
         }
         //Eliminar la ficha en el panel
@@ -525,13 +723,7 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
     
     public void trasladarFicha(PanelCasilla panel){
         //Cambiar turno
-        if(isTurnoBlanco){
-            isTurnoBlanco = false;
-
-        }else{
-
-            isTurnoBlanco = true;
-        }
+        turnoBlanco = !turnoBlanco;
         Iterator<PanelCasilla> i = movimientos.iterator();
         PanelCasilla anterior = i.next();
         panel.setFicha(anterior.getFicha());
@@ -594,4 +786,6 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener  {
     public void mouseExited(MouseEvent e) {
      
     }
+
+
 }
