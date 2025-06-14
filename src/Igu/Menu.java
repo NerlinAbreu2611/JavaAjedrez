@@ -1,7 +1,5 @@
 package Igu;
 
-import ajedrez.Tablero;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;

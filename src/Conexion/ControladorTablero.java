@@ -115,7 +115,7 @@ public class ControladorTablero {
     }
 
     public static List<Partida> getPartidas(){
-        String sql = "select * from partida";
+        String sql = "SELECT * FROM partida ORDER BY fecha_partida ASC";
         List<Partida> partidas = new ArrayList<>();
         try(Connection c = Conexion.getConnetion()){
             Statement st = c.createStatement();
@@ -136,9 +136,9 @@ public class ControladorTablero {
      return partidas;
     }
 
-    public void guardar(ArrayList<Ficha> fichasBlancas, ArrayList<Ficha> fichasNegras, PanelCasilla[][] casillas, boolean turnoBlanco){
+    public void guardar(ArrayList<Ficha> fichasBlancas, ArrayList<Ficha> fichasNegras, PanelCasilla[][] casillas, boolean turnoBlanco,Timestamp fecha){
         Connection conn = Conexion.getConnetion();
-        String sqlPartida = "insert into partida(fecha_partida,turno_blanco) values (now(),?)";
+        String sqlPartida = "insert into partida(fecha_partida,turno_blanco) values (?,?)";
         String sqlTablero = "insert into tablero(id_partida, id_ficha,coordenada_ficha_x, coordenada_ficha_y) values (?,?,?,?)";
 
         try {
@@ -146,7 +146,8 @@ public class ControladorTablero {
 
             // Insertar partida y obtener ID generado
             PreparedStatement psPartida = conn.prepareStatement(sqlPartida, Statement.RETURN_GENERATED_KEYS);
-            psPartida.setBoolean(1,turnoBlanco);
+            psPartida.setTimestamp(1,fecha);
+            psPartida.setBoolean(2,turnoBlanco);
             psPartida.executeUpdate();
             ResultSet rs = psPartida.getGeneratedKeys();
             int idPartida = 0;

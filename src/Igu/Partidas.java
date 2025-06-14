@@ -3,7 +3,6 @@ package Igu;
 import Conexion.ControladorTablero;
 import Modelo.FichaModelo;
 import Modelo.Partida;
-import ajedrez.Tablero;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +15,7 @@ public class Partidas extends JFrame {
     private Color marron = new Color(139,69,19);
     private Font fuente = new Font("Monospaced", Font.BOLD, 14);
     private JFrame menu;
+    private int tamanoMapa;
 
     private JPanel panelPrincipal;
     public Partidas(JFrame menu){
@@ -56,20 +56,36 @@ public class Partidas extends JFrame {
 
         botonEliminar.addActionListener(b ->{
 
-            int indice = comboBox.getSelectedIndex();
-            Partida p = mapa.get(indice + 1);
-            if(ControladorTablero.existeLaPartida(p)){
-                if(ControladorTablero.borrarPartida(p)){
-                    mapa.remove(comboBox.getSelectedIndex() + 1);
-                    ((DefaultComboBoxModel<String>) comboBox.getModel()).removeElementAt(indice);
-                    if (comboBox.getItemCount() == 0) {
-                        botonIniciar.setEnabled(false);
-                        botonEliminar.setEnabled(false);
-                    }
+            int indice = tamanoMapa;
+            boolean encontrado = false;
+            int i = 1;
 
+            String datos = (String) modelo.getSelectedItem();
+
+            String []dato = datos.split(":");
+
+            String fecha = dato[3] + ":" +dato[4] + ":"+ dato[5];
+
+            while (!encontrado && i <= indice){
+
+                if(mapa.get(i) != null){
+                 Partida p = mapa.get(i);
+                 String fechaP = p.getFecha() + "";
+                 if(fechaP.equalsIgnoreCase(fecha)){
+                     modelo.removeElement(modelo.getSelectedItem());
+                     mapa.remove(i);
+                     ControladorTablero.borrarPartida(p);
+                     encontrado = true;
+                 }
                 }
-
+                i++;
             }
+
+            if(modelo.getSize() == 0){
+                botonEliminar.setEnabled(false);
+                botonIniciar.setEnabled(false);
+            }
+
 
         });
 
@@ -78,10 +94,11 @@ public class Partidas extends JFrame {
 
 
     private JButton botonEliminar;
+    DefaultComboBoxModel<String> modelo;
 
     private void inicializarComponentes(){
         List<Partida> lista = ControladorTablero.getPartidas();
-        DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
+        modelo = new DefaultComboBoxModel<>();
         mapa = new HashMap<>();
 
         int i = 1;
@@ -91,7 +108,7 @@ public class Partidas extends JFrame {
             i++;
         }
 
-
+        tamanoMapa = mapa.size();
         comboBox = new JComboBox<>(modelo);
         comboBox.setBounds(55,50,370,30);
         comboBox.setFont(fuente);

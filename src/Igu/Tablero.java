@@ -2,10 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package ajedrez;
+package Igu;
 import Conexion.ControladorTablero;
+import Igu.Ganador;
 import Modelo.FichaModelo;
 import Modelo.Partida;
+import ajedrez.*;
 
 import javax.sound.sampled.*;
 
@@ -15,6 +17,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -84,14 +87,16 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener {
 
                     if(partida != null){
                         if(ControladorTablero.existeLaPartida(partida)){
+                            Timestamp fecha = partida.getFecha();
                             if(ControladorTablero.borrarPartida(partida)){
                                 ControladorTablero con = new ControladorTablero();
-                                con.guardar(fichasBlancas, fichasNegras, matrizCasillas,turnoBlanco);
+                                con.guardar(fichasBlancas, fichasNegras, matrizCasillas,turnoBlanco,fecha);
                             }
                         }
                     }else{
                         ControladorTablero con = new ControladorTablero();
-                        con.guardar(fichasBlancas, fichasNegras, matrizCasillas,turnoBlanco);
+                        Timestamp ahora = new Timestamp(System.currentTimeMillis());
+                        con.guardar(fichasBlancas, fichasNegras, matrizCasillas,turnoBlanco,ahora);
                     }
                 }
                     setVisible(false);
@@ -106,6 +111,7 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener {
     public Tablero(JFrame menu){
         this();
         this.agregarFichas();
+        this.menu = menu;
         this.setVisible(true);
         accionarCierreDeVentana(menu);
         this.agregarEventosCasillas();
@@ -514,37 +520,7 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Tablero.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Tablero.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Tablero.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Tablero.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Tablero().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel panelBase;
@@ -669,11 +645,9 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener {
         }
 
         if(f.getEquipo().equalsIgnoreCase("blanco") && f.getTipo().equalsIgnoreCase("rey")){
-            JOptionPane.showMessageDialog(this,"EL JUGADOR NEGRO HA GANADO");
-            finalizarPartida();
+            Ganador g = new Ganador("/imagenes/caballero (1).png","NEGRO",menu,partida,this);
         }else if(f.getTipo().equalsIgnoreCase("rey")){
-            JOptionPane.showMessageDialog(this,"El JUGADOR BLANCO HA GANADO");
-            finalizarPartida();
+            Ganador g = new Ganador("/imagenes/caballero.png","BLANCO",menu,partida,this);
         }
 
         fichas.remove(indice);
@@ -690,11 +664,12 @@ public class Tablero extends javax.swing.JFrame implements  MouseListener {
     private void finalizarPartida(){
         if(ControladorTablero.existeLaPartida(partida)){
             if(ControladorTablero.borrarPartida(partida)){
-                setVisible(false);
-                menu.setVisible(true);
-                dispose();
             }
         }
+
+        setVisible(false);
+        menu.setVisible(true);
+        dispose();
     }
 
     public void eliminarFicha(PanelCasilla panel){
